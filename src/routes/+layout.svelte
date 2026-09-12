@@ -12,7 +12,7 @@
     let unlisten: (() => void) | undefined;
 
     onBackButtonPress(() => {
-      if (window.location.pathname === '/') return; // let OS default happen on Home
+      if (window.location.pathname === '/') return;
       history.back();
     }).then((listener) => {
       unlisten = () => listener.unregister();
@@ -39,6 +39,6 @@
 
   main {
     flex: 1;
-    padding-bottom: 4.5rem; /* clears the fixed bottom nav so content isn't hidden behind it */
+    padding-bottom: 4.5rem;
   }
 </style>

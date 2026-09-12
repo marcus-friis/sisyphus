@@ -1,15 +1,192 @@
-:global(html, body) {
+:root {
+    color-scheme: light dark;
+
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+
+    --color-bg: #FBF1C7;
+    --color-surface: #EBDBB2;
+    --color-border: #BDAE93;
+    --color-text: #3C3836;
+    --color-text-muted: #7C6F64;
+    --color-primary: #D65D0E;
+    --color-primary-text: #FBF1C7;
+    --color-highlight: #98971A;
+    --color-danger: #CC241D;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg: #282828;
+        --color-surface: #3C3836;
+        --color-border: #7C6F64;
+        --color-text: #EBDBB2;
+        --color-text-muted: #A89984;
+        --color-primary: #FE8019;
+        --color-primary-text: #282828;
+        --color-highlight: #B8BB26;
+        --color-danger: #FB4934;
+    }
+}
+
+:root[data-theme='light'] {
+    --color-bg: #FBF1C7;
+    --color-surface: #EBDBB2;
+    --color-border: #BDAE93;
+    --color-text: #3C3836;
+    --color-text-muted: #7C6F64;
+    --color-primary: #D65D0E;
+    --color-primary-text: #FBF1C7;
+    --color-highlight: #98971A;
+    --color-danger: #CC241D;
+}
+
+:root[data-theme='dark'] {
+    --color-bg: #282828;
+    --color-surface: #3C3836;
+    --color-border: #7C6F64;
+    --color-text: #EBDBB2;
+    --color-text-muted: #A89984;
+    --color-primary: #FE8019;
+    --color-primary-text: #282828;
+    --color-highlight: #B8BB26;
+    --color-danger: #FB4934;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
     height: 100%;
     margin: 0;
     overscroll-behavior-y: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
 }
 
-:global(input, textarea) {
+input,
+textarea {
     -webkit-user-select: text;
 }
 
-:global(*) {
-    box-sizing: border-box;
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    margin: 0;
+}
+
+a {
+    color: var(--color-primary);
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+input,
+select,
+textarea {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0.6rem 0.8rem;
+}
+
+button,
+.btn {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+}
+
+button:disabled,
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary);
+}
+
+.btn-danger {
+    background: var(--color-bg);
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.card {
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    padding: 1rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.error {
+    color: var(--color-danger);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.empty {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.section-label {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.status-sent,
+.status-flashed {
+    color: var(--color-highlight);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+.status-project {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }

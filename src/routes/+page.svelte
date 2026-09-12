@@ -4,13 +4,14 @@
 </script>
 
 <main class="content">
-  <p class="welcome">Hello {data.username}.</p>
-  <a class="btn" href="/boulders/add">add boulder</a>
+  <p class="welcome">Hello, {data.username}.</p>
+
+  <a class="btn btn-primary cta" href="/boulders/add">Log boulder</a>
 
   <section class="recent">
-    <h2>Recent activity</h2>
+    <h2 class="section-label">Recent activity</h2>
     {#await data.boulders}
-      <p>Loading...</p>
+      <p class="empty">Loading...</p>
     {:then boulders}
       {#if boulders.length === 0}
         <p class="empty">Nothing logged yet — go climb something.</p>
@@ -29,43 +30,34 @@
   .content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 1.5rem;
-    padding: 2rem 1rem;
+    gap: 1.75rem;
+    padding: 2.5rem 1.25rem;
   }
+
   .welcome {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 3rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.9rem;
     margin: 0;
+    align-self: flex-start;
   }
-  .btn {
-    border: 1px solid black;
-    color: black;
-    padding: 8px;
-    border-radius: 8px;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 2rem;
-    width: fit-content;
+
+  .cta {
+    width: 100%;
+    max-width: 320px;
+    font-size: 1.1rem;
+    padding: 0.85rem 1.5rem;
   }
+
   .recent {
     width: 100%;
     max-width: 320px;
   }
-  .recent h2 {
-    font-size: 1rem;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
+
   .list {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-  }
-  .empty {
-    color: #888;
-    font-size: 0.9rem;
+    gap: 0.75rem;
   }
 </style>
