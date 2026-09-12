@@ -29,12 +29,12 @@
   </section>
 
   <section>
-    <h2>Grade pyramid</h2>
+    <h2 class="section-label">Grade pyramid</h2>
     <GradePyramid data={data.pyramid} />
   </section>
 
   <section>
-    <h2>Progress over time</h2>
+    <h2 class="section-label">Progress over time</h2>
     <ProgressChart data={data.progress} />
   </section>
 </main>
@@ -77,11 +77,4 @@
     margin-bottom: 2rem;
   }
 
-  h2 {
-    font-size: 1rem;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
-  }
 </style>

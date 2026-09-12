@@ -28,11 +28,11 @@
     <p class="empty">No sends logged yet.</p>
   {:else}
     <svg viewBox="0 0 {width} {height}" width="100%">
-      <path d={pathD} fill="none" stroke="#333" stroke-width="2" />
+      <path d={pathD} fill="none" stroke="var(--color-primary)" stroke-width="2" />
       {#each points as p (p.month)}
-        <circle cx={p.x} cy={p.y} r="3.5" fill="#333" />
-        <text x={p.x} y={p.y - 10} text-anchor="middle" font-size="10" fill="#333">V{p.grade}</text>
-        <text x={p.x} y={height - 6} text-anchor="middle" font-size="8" fill="#888">
+        <circle cx={p.x} cy={p.y} r="3.5" fill="var(--color-primary)" />
+        <text x={p.x} y={p.y - 10} text-anchor="middle" font-size="10" fill="var(--color-primary)">V{p.grade}</text>
+        <text x={p.x} y={height - 6} text-anchor="middle" font-size="8" fill="var(--color-text)">
           {p.month.slice(5)}
         </text>
       {/each}
@@ -43,9 +43,5 @@
 <style>
   .progress-chart {
     width: 100%;
-  }
-  .empty {
-    color: #888;
-    font-size: 0.9rem;
   }
 </style>

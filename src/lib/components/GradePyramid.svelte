@@ -40,25 +40,19 @@
   }
   .bar-track {
     flex: 1;
-    background: #eee;
-    border-radius: 4px;
+    background: var(--color-surface);
     height: 18px;
     overflow: hidden;
   }
   .bar {
     height: 100%;
-    background: #333;
-    border-radius: 4px;
+    background: var(--color-primary);
     min-width: 2px;
   }
   .count {
     width: 1.5rem;
     text-align: right;
     font-size: 0.8rem;
-    color: #666;
-  }
-  .empty {
-    color: #888;
-    font-size: 0.9rem;
+    color: var(--color-text);
   }
 </style>
