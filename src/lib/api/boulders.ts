@@ -9,7 +9,17 @@ import type {
 export async function fetchBoulders(): Promise<BoulderWithStats[]> {
   const db = await getDb();
   return db.select<BoulderWithStats[]>(`
-    SELECT b.*,
+    SELECT
+      b.id,
+      b.name,
+      b.grade_v AS gradeV,
+      b.grade_font AS gradeFont,
+      b.gym_id AS gymId,
+      b.wall_angle AS wallAngle,
+      b.status,
+      b.date_first_tried AS dateFirstTried,
+      b.date_sent AS dateSent,
+      b.notes,
       COALESCE(SUM(a.attempts), 0) AS totalAttempts,
       MAX(a.date) AS lastTriedDate
     FROM boulder b
