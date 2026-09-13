@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { invalidateAll } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import type { PageProps } from './$types';
   import { deleteBoulder } from '$lib/api/boulders';
   import { addAttempt } from '$lib/api/attempts';
-import { pickMediaFile } from '$lib/media/upload';
-import { createMedia } from '$lib/api/media';
-import { convertFileSrc } from '@tauri-apps/api/core';
+  import { pickMediaFile } from '$lib/media/upload';
+  import { createMedia } from '$lib/api/media';
+  import { convertFileSrc } from '@tauri-apps/api/core';
 
   let { data }: PageProps = $props();
   let { boulder, attempts, media } = $derived(data);
@@ -18,6 +17,7 @@ import { convertFileSrc } from '@tauri-apps/api/core';
   let newNotes = $state('');
   let saving = $state(false);
   let deleting = $state(false);
+  let uploading = $state(false);
 
   const statusLabel = { project: 'Project', sent: 'Sent', flashed: 'Flashed' };
   const resultLabel = { fell: 'Fell', sent: 'Sent', flash: 'Flash' };
@@ -48,20 +48,17 @@ import { convertFileSrc } from '@tauri-apps/api/core';
     await goto('/boulders');
   }
 
-
-let uploading = $state(false);
-
-async function handleAddMedia() {
-  uploading = true;
-  try {
-    const picked = await pickMediaFile();
-    if (!picked) return; // cancelled
-    await createMedia(boulder.id, picked.type, picked.storedPath);
-    await invalidateAll();
-  } finally {
-    uploading = false;
+  async function handleAddMedia() {
+    uploading = true;
+    try {
+      const picked = await pickMediaFile();
+      if (!picked) return;
+      await createMedia(boulder.id, picked.type, picked.storedPath);
+      await invalidateAll();
+    } finally {
+      uploading = false;
+    }
   }
-}
 </script>
 
 <div class="boulder-detail">
@@ -69,9 +66,9 @@ async function handleAddMedia() {
     <div>
       <h1>{boulder.name ?? `V${boulder.gradeV} project`}</h1>
       <span class="grade">V{boulder.gradeV}</span>
-      <span class="status status-{boulder.status}">{statusLabel[boulder.status]}</span>
+      <span class="status-{boulder.status}">{statusLabel[boulder.status]}</span>
     </div>
-    <button class="danger" onclick={handleDelete} disabled={deleting}>
+    <button class="btn-danger" onclick={handleDelete} disabled={deleting}>
       {deleting ? 'Deleting...' : 'Delete'}
     </button>
   </div>
@@ -84,40 +81,40 @@ async function handleAddMedia() {
     <p class="notes">{boulder.notes}</p>
   {/if}
 
-<section class="media">
-  <div class="attempts-header">
-    <h2>Media</h2>
-    <button onclick={handleAddMedia} disabled={uploading}>
-      {uploading ? 'Adding...' : '+ Add photo/video'}
-    </button>
-  </div>
-
-  {#if media.length === 0}
-    <p class="empty">No photos or videos yet.</p>
-  {:else}
-    <div class="media-grid">
-      {#each media as item (item.id)}
-        {#if item.type === 'photo'}
-          <img src={convertFileSrc(item.filePath)} alt={item.caption ?? 'Boulder photo'} />
-        {:else}
-          <video src={convertFileSrc(item.filePath)} controls></video>
-        {/if}
-      {/each}
+  <section>
+    <div class="section-header">
+      <h2 class="section-label">Media</h2>
+      <button onclick={handleAddMedia} disabled={uploading}>
+        {uploading ? 'Adding...' : '+ Add photo/video'}
+      </button>
     </div>
-  {/if}
-</section>
 
-  <section class="attempts">
-    <div class="attempts-header">
-      <h2>Attempts ({attempts.reduce((sum, a) => sum + a.attempts, 0)} total)</h2>
+    {#if media.length === 0}
+      <p class="empty">No photos or videos yet.</p>
+    {:else}
+      <div class="media-grid">
+        {#each media as item (item.id)}
+          {#if item.type === 'photo'}
+            <img src={convertFileSrc(item.filePath)} alt={item.caption ?? 'Boulder photo'} />
+          {:else}
+            <video src={convertFileSrc(item.filePath)} controls></video>
+          {/if}
+        {/each}
+      </div>
+    {/if}
+  </section>
+
+  <section>
+    <div class="section-header">
+      <h2 class="section-label">Attempts ({attempts.reduce((sum, a) => sum + a.attempts, 0)} total)</h2>
       <button onclick={() => (showAttemptForm = !showAttemptForm)}>
         {showAttemptForm ? 'Cancel' : '+ Log attempt'}
       </button>
     </div>
 
     {#if showAttemptForm}
-      <form onsubmit={handleAddAttempt}>
-        <label>
+      <form class="card" onsubmit={handleAddAttempt}>
+        <label class="field">
           Result
           <select bind:value={newResult}>
             <option value="fell">Fell</option>
@@ -125,19 +122,21 @@ async function handleAddMedia() {
             <option value="flash">Flash</option>
           </select>
         </label>
-        <label>
+        <label class="field">
           Attempts
           <input type="number" min="1" bind:value={newAttempts} disabled={newResult === 'flash'} />
         </label>
-        <label>
+        <label class="field">
           Date
           <input type="date" bind:value={newDate} />
         </label>
-        <label>
+        <label class="field">
           Notes
           <textarea bind:value={newNotes} placeholder="What changed this time?"></textarea>
         </label>
-        <button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save'}</button>
+        <button type="submit" class="btn-primary" disabled={saving}>
+          {saving ? 'Saving...' : 'Save'}
+        </button>
       </form>
     {/if}
 
@@ -170,89 +169,108 @@ async function handleAddMedia() {
     justify-content: space-between;
     align-items: flex-start;
     gap: 1rem;
+    margin-bottom: 1rem;
   }
 
   h1 {
-    margin: 0 0 0.4rem;
-    font-size: 1.4rem;
+    margin: 0 0 0.5rem;
+    font-size: 1.3rem;
   }
 
   .grade {
-    font-weight: 600;
-    margin-right: 0.5rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    margin-right: 0.75rem;
   }
 
-  .status {
-    font-size: 0.8rem;
-    padding: 0.15rem 0.5rem;
-    border-radius: 999px;
-    background: #eee;
+  .meta {
+    color: var(--color-text-muted);
+    text-transform: capitalize;
+    margin: 0.5rem 0 0;
   }
-  .status-sent, .status-flashed { background: #d4edda; color: #256029; }
-  .status-project { background: #fff3cd; color: #7a5c00; }
 
-  .meta { color: #666; text-transform: capitalize; margin: 0.5rem 0 0; }
-  .notes { margin: 0.75rem 0; color: #333; }
+  .notes {
+    margin: 0.75rem 0;
+  }
 
-  section { margin-top: 2rem; }
-  h2 { font-size: 1.05rem; margin-bottom: 0.75rem; }
+  section {
+    margin-top: 2rem;
+  }
 
-  .attempts-header {
+  .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
 
-  .empty { color: #888; font-size: 0.9rem; }
+  .section-header .section-label {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
 
   .media-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 0.5rem;
+    gap: 0.6rem;
   }
-  .media-grid img, .media-grid video {
+
+  .media-grid img,
+  .media-grid video {
     width: 100%;
-    border-radius: 6px;
+    aspect-ratio: 1;
     object-fit: cover;
+    border: 2px solid var(--color-border);
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    margin: 1rem 0;
-    padding: 1rem;
-    background: #fafafa;
-    border-radius: 8px;
-  }
-  label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; }
-  input, select, textarea {
-    padding: 0.5rem 0.65rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-family: inherit;
+    gap: 0.9rem;
+    margin: 0 0 1rem;
   }
 
-  .timeline { list-style: none; padding: 0; margin: 0; }
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
   .timeline li {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #eee;
+    padding: 0.85rem 0;
+    border-bottom: 2px solid var(--color-border);
   }
-  .date { color: #888; font-size: 0.85rem; margin-right: 0.5rem; }
-  .result { font-weight: 600; margin-right: 0.5rem; }
-  .result-sent, .result-flash { color: #256029; }
-  .result-fell { color: #888; }
-  .count { font-size: 0.85rem; color: #666; }
-  .attempt-notes { margin: 0.3rem 0 0; font-size: 0.9rem; color: #444; }
 
-  button {
-    padding: 0.5rem 0.9rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background: white;
-    cursor: pointer;
+  .date {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-right: 0.6rem;
   }
-  button[type="submit"] { background: #333; color: white; border: none; }
-  .danger { color: #c0392b; border-color: #f5c6cb; }
-  button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .result {
+    font-weight: 700;
+    margin-right: 0.5rem;
+  }
+
+  .result-sent,
+  .result-flash {
+    color: var(--color-highlight);
+  }
+
+  .result-fell {
+    color: var(--color-text-muted);
+  }
+
+  .count {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .attempt-notes {
+    margin: 0.35rem 0 0;
+    font-size: 0.9rem;
+  }
 </style>

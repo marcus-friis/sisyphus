@@ -28,11 +28,11 @@
     <p class="empty">No sends logged yet.</p>
   {:else}
     <svg viewBox="0 0 {width} {height}" width="100%">
-      <path d={pathD} fill="none" stroke="var(--color-primary)" stroke-width="2" />
+      <path d={pathD} fill="none" stroke="var(--color-primary)" stroke-width="3" />
       {#each points as p (p.month)}
-        <circle cx={p.x} cy={p.y} r="3.5" fill="var(--color-primary)" />
-        <text x={p.x} y={p.y - 10} text-anchor="middle" font-size="10" fill="var(--color-primary)">V{p.grade}</text>
-        <text x={p.x} y={height - 6} text-anchor="middle" font-size="8" fill="var(--color-text)">
+        <rect x={p.x - 3.5} y={p.y - 3.5} width="7" height="7" fill="var(--color-primary)" />
+        <text x={p.x} y={p.y - 10} text-anchor="middle" font-size="10" font-family="var(--font-mono)" font-weight="700" fill="var(--color-text)">V{p.grade}</text>
+        <text x={p.x} y={height - 6} text-anchor="middle" font-size="8" fill="var(--color-text-muted)">
           {p.month.slice(5)}
         </text>
       {/each}

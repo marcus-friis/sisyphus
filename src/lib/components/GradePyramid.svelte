@@ -12,7 +12,7 @@
   {:else}
     {#each data.slice().reverse() as row (row.gradeV)}
       <div class="row">
-        <span class="label">V{row.gradeV}</span>
+        <span class="grade-label">V{row.gradeV}</span>
         <div class="bar-track">
           <div class="bar" style="width: {(row.count / maxCount) * 100}%"></div>
         </div>
@@ -26,33 +26,39 @@
   .pyramid {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
   }
+
   .row {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.7rem;
   }
-  .label {
+
+  .grade-label {
     width: 2.5rem;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-weight: 700;
     font-size: 0.85rem;
   }
+
   .bar-track {
     flex: 1;
     background: var(--color-surface);
-    height: 18px;
-    overflow: hidden;
+    border: 2px solid var(--color-border);
+    height: 20px;
   }
+
   .bar {
     height: 100%;
     background: var(--color-primary);
-    min-width: 2px;
+    min-width: 3px;
   }
+
   .count {
     width: 1.5rem;
     text-align: right;
     font-size: 0.8rem;
-    color: var(--color-text);
+    color: var(--color-text-muted);
   }
 </style>

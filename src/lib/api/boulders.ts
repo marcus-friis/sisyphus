@@ -10,18 +10,14 @@ export async function fetchBoulders(): Promise<BoulderWithStats[]> {
   const db = await getDb();
   return db.select<BoulderWithStats[]>(`
     SELECT
-      b.id,
-      b.name,
-      b.grade_v AS gradeV,
-      b.grade_font AS gradeFont,
-      b.gym_id AS gymId,
-      b.wall_angle AS wallAngle,
-      b.status,
-      b.date_first_tried AS dateFirstTried,
-      b.date_sent AS dateSent,
-      b.notes,
+      b.id, b.name, b.grade_v AS gradeV, b.grade_font AS gradeFont, b.gym_id AS gymId,
+      b.wall_angle AS wallAngle, b.status, b.date_first_tried AS dateFirstTried,
+      b.date_sent AS dateSent, b.notes,
       COALESCE(SUM(a.attempts), 0) AS totalAttempts,
-      MAX(a.date) AS lastTriedDate
+      MAX(a.date) AS lastTriedDate,
+      (SELECT m.file_path FROM media m
+       WHERE m.boulder_id = b.id AND m.type = 'photo'
+       ORDER BY m.created_at ASC LIMIT 1) AS thumbnailPath
     FROM boulder b
     LEFT JOIN attempt a ON a.boulder_id = b.id
     GROUP BY b.id

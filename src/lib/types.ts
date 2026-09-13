@@ -14,6 +14,7 @@ export interface Boulder {
 export interface BoulderWithStats extends Boulder {
   totalAttempts: number;
   lastTriedDate: string | null;
+  thumbnailPath: string | null;
 }
 
 export interface NewBoulderInput {

@@ -35,13 +35,13 @@
   <h1>Settings</h1>
 
   <section>
-    <h2>Profile</h2>
+    <h2 class="section-label">Profile</h2>
     <form onsubmit={handleSaveUsername}>
-      <label>
+      <label class="field">
         Name
         <input type="text" bind:value={username} placeholder="Your name" />
       </label>
-      <button type="submit" disabled={savingUsername}>
+      <button type="submit" class="btn-primary" disabled={savingUsername}>
         {savingUsername ? 'Saving...' : 'Save'}
       </button>
       {#if usernameSaved}<span class="saved">Saved</span>{/if}
@@ -49,7 +49,7 @@
   </section>
 
   <section>
-    <h2>Grade system</h2>
+    <h2 class="section-label">Grade system</h2>
     <label class="radio-row">
       <input type="radio" bind:group={gradeSystem} value="v" onchange={handleGradeSystemChange} />
       V-scale
@@ -72,60 +72,23 @@
     margin-bottom: 2rem;
   }
 
-  h2 {
-    font-size: 1rem;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
-  }
-
   form {
     display: flex;
     align-items: flex-end;
-    gap: 0.6rem;
-  }
-
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    font-size: 0.9rem;
-    color: #444;
+    gap: 0.75rem;
   }
 
   .radio-row {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 0.4rem;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
     font-size: 0.95rem;
-  }
-
-  input[type="text"] {
-    padding: 0.5rem 0.65rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-family: inherit;
-  }
-
-  button {
-    padding: 0.55rem 0.9rem;
-    border-radius: 6px;
-    border: none;
-    background: #333;
-    color: white;
-    cursor: pointer;
-  }
-
-  button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
   }
 
   .saved {
     font-size: 0.85rem;
-    color: #256029;
+    color: var(--color-highlight);
   }
 </style>

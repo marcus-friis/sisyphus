@@ -58,23 +58,22 @@
     flex-direction: column;
     align-items: center;
     padding: 0.75rem 0.25rem;
-    border: 1px solid #eee;
-    border-radius: 8px;
+    border: 2px solid var(--color-border);
   }
 
   .stat .value {
+    font-family: var(--font-mono);
     font-size: 1.4rem;
     font-weight: 700;
   }
 
   .stat .label {
     font-size: 0.7rem;
-    color: #888;
+    color: var(--color-text-muted);
     text-align: center;
   }
 
   section {
     margin-bottom: 2rem;
   }
-
 </style>

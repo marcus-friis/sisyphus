@@ -41,7 +41,7 @@
     {#if error}
       <p class="error">{error}</p>
     {/if}
-    <button type="submit" disabled={submitting}>
+    <button type="submit" class="btn-primary" disabled={submitting}>
       {submitting ? 'Saving...' : 'Continue'}
     </button>
   </form>
@@ -54,42 +54,14 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    gap: 1rem;
+    gap: 1.25rem;
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.85rem;
     width: 100%;
     max-width: 280px;
-  }
-
-  input {
-    padding: 0.6rem 0.8rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-
-  button {
-    padding: 0.6rem;
-    font-size: 1rem;
-    border-radius: 6px;
-    border: none;
-    background: #333;
-    color: white;
-    cursor: pointer;
-  }
-
-  button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .error {
-    color: #c0392b;
-    font-size: 0.875rem;
-    margin: 0;
   }
 </style>

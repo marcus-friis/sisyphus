@@ -21,7 +21,7 @@
 <main class="log">
   <div class="header">
     <h1>Boulders</h1>
-    <a class="btn" href="/boulders/add">+ Add</a>
+    <a class="btn btn-primary" href="/boulders/add">+ Add</a>
   </div>
 
   <div class="filters">
@@ -39,7 +39,7 @@
   </div>
 
   {#if filtered.length === 0}
-    <p class="empty">Nothing matches — try a different filter.</p>
+    <p class="empty centered">Nothing matches — try a different filter.</p>
   {:else}
     <div class="list">
       {#each filtered as boulder (boulder.id)}
@@ -60,48 +60,28 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
-  }
-
-  .header h1 {
-    margin: 0;
-  }
-
-  .btn {
-    border: 1px solid #c00;
-    color: white;
-    background-color: #200;
-    padding: 6px 10px;
-    border-radius: 8px;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 0.9rem;
-    text-decoration: none;
+    margin-bottom: 1.25rem;
   }
 
   .filters {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.6rem;
     margin-bottom: 1.25rem;
   }
 
   .filters select {
-    padding: 0.4rem 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    flex: 1;
     font-size: 0.85rem;
+    padding: 0.5rem 0.6rem;
   }
 
   .list {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    align-items: center;
+    gap: 0.75rem;
   }
 
-  .empty {
-    color: #888;
-    font-size: 0.9rem;
+  .centered {
     text-align: center;
     margin-top: 2rem;
   }

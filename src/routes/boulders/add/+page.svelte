@@ -12,6 +12,7 @@
   let gymId = $state<number | 'new' | null>(gyms[0]?.id ?? null);
   let newGymName = $state('');
 
+  let name = $state('');
   let gradeV = $state(2);
   let wallAngle = $state<'slab' | 'vertical' | 'overhang' | 'roof'>('vertical');
   let result = $state<'fell' | 'sent' | 'flash'>('sent');
@@ -19,8 +20,6 @@
   let date = $state(new Date().toISOString().slice(0, 10));
   let notes = $state('');
 
-  // Media is picked and copied to disk immediately, but only linked to a
-  // boulder row once the boulder itself exists (after submit).
   let stagedMedia = $state<PickedMedia[]>([]);
   let pickingMedia = $state(false);
 
@@ -54,7 +53,13 @@
       }
 
       const boulderId = await createBoulderWithFirstAttempt(
-        { gradeV, wallAngle, gymId: resolvedGymId ?? undefined, notes: notes || undefined },
+        {
+          name: name.trim() || undefined,
+          gradeV,
+          wallAngle,
+          gymId: resolvedGymId ?? undefined,
+          notes: notes || undefined,
+        },
         { date, attempts, result },
       );
 
@@ -74,7 +79,12 @@
   <h1>Log a boulder</h1>
 
   <form onsubmit={handleSubmit}>
-    <label>
+    <label class="field">
+      <span>Name <span class="optional">(optional)</span></span>
+      <input type="text" bind:value={name} placeholder="e.g. Crimson traverse" />
+    </label>
+
+    <label class="field">
       Grade
       <select bind:value={gradeV}>
         {#each Array.from({ length: 17 }, (_, i) => i) as v}
@@ -83,7 +93,7 @@
       </select>
     </label>
 
-    <label>
+    <label class="field">
       Wall angle
       <select bind:value={wallAngle}>
         <option value="slab">Slab</option>
@@ -93,7 +103,7 @@
       </select>
     </label>
 
-    <label>
+    <label class="field">
       Gym
       <select bind:value={gymId}>
         {#each gyms as gym (gym.id)}
@@ -104,13 +114,13 @@
     </label>
 
     {#if gymId === 'new'}
-      <label>
+      <label class="field">
         New gym name
         <input type="text" bind:value={newGymName} placeholder="e.g. Beta Boulders" />
       </label>
     {/if}
 
-    <label>
+    <label class="field">
       Result
       <select bind:value={result}>
         <option value="flash">Flash</option>
@@ -119,17 +129,17 @@
       </select>
     </label>
 
-    <label>
+    <label class="field">
       Attempts today
       <input type="number" min="1" bind:value={attempts} disabled={result === 'flash'} />
     </label>
 
-    <label>
+    <label class="field">
       Date
       <input type="date" bind:value={date} />
     </label>
 
-    <label>
+    <label class="field">
       Notes
       <textarea bind:value={notes} placeholder="Beta, sequence, how it felt..."></textarea>
     </label>
@@ -151,7 +161,7 @@
               {:else}
                 <video src={item.displaySrc} muted></video>
               {/if}
-              <button type="button" class="remove" onclick={() => removeStagedMedia(i)}>✕</button>
+              <button type="button" class="btn-danger remove" onclick={() => removeStagedMedia(i)}>✕</button>
             </div>
           {/each}
         </div>
@@ -162,7 +172,7 @@
       <p class="error">{error}</p>
     {/if}
 
-    <button type="submit" disabled={submitting}>
+    <button type="submit" class="btn-primary" disabled={submitting}>
       {submitting ? 'Saving...' : 'Log it'}
     </button>
   </form>
@@ -178,23 +188,12 @@
   form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.1rem;
   }
 
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    font-size: 0.9rem;
-    color: #444;
-  }
-
-  input, select, textarea {
-    padding: 0.55rem 0.7rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-family: inherit;
+  .optional {
+    font-weight: 400;
+    color: var(--color-text-muted);
   }
 
   textarea {
@@ -205,7 +204,7 @@
   .media-field {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.6rem;
   }
 
   .media-field-header {
@@ -213,74 +212,43 @@
     justify-content: space-between;
     align-items: center;
     font-size: 0.9rem;
-    color: #444;
+    color: var(--color-text-muted);
   }
 
   .media-field-header button {
-    padding: 0.3rem 0.6rem;
+    padding: 0.4rem 0.7rem;
     font-size: 0.85rem;
-    margin-top: 0;
-    background: white;
-    color: #333;
-    border: 1px solid #ccc;
   }
 
   .media-preview-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    gap: 0.6rem;
   }
 
   .media-preview {
     position: relative;
   }
 
-  .media-preview img, .media-preview video {
+  .media-preview img,
+  .media-preview video {
     width: 100%;
-    height: 80px;
+    aspect-ratio: 1;
     object-fit: cover;
-    border-radius: 6px;
+    border: 2px solid var(--color-border);
   }
 
   .media-preview .remove {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 20px;
-    height: 20px;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
     padding: 0;
-    margin: 0;
-    border-radius: 50%;
-    border: none;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
     font-size: 0.7rem;
     line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-  }
-
-  button {
-    padding: 0.65rem;
-    font-size: 1rem;
-    border-radius: 6px;
-    border: none;
-    background: #333;
-    color: white;
-    cursor: pointer;
-    margin-top: 0.5rem;
-  }
-
-  button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .error {
-    color: #c0392b;
-    font-size: 0.875rem;
-    margin: 0;
   }
 </style>
