@@ -25,7 +25,7 @@ export interface SendStats {
 
 export async function fetchGradePyramid(): Promise<GradePyramidRow[]> {
   const db = await getDb();
-  return db.select<GradePyramidRow[]>(`
+  return await db.select<GradePyramidRow[]>(`
     SELECT grade_v AS gradeV, COUNT(*) AS count
     FROM boulder
     WHERE status IN ('sent', 'flashed')
@@ -36,7 +36,7 @@ export async function fetchGradePyramid(): Promise<GradePyramidRow[]> {
 
 export async function fetchMonthlyVolume(): Promise<MonthlyVolumeRow[]> {
   const db = await getDb();
-  return db.select<MonthlyVolumeRow[]>(`
+  return await db.select<MonthlyVolumeRow[]>(`
     SELECT strftime('%Y-%m', date) AS month,
            COUNT(DISTINCT boulder_id) AS boulders,
            SUM(attempts) AS attempts
@@ -48,7 +48,7 @@ export async function fetchMonthlyVolume(): Promise<MonthlyVolumeRow[]> {
 
 export async function fetchProgressOverTime(): Promise<ProgressRow[]> {
   const db = await getDb();
-  return db.select<ProgressRow[]>(`
+  return await db.select<ProgressRow[]>(`
     SELECT strftime('%Y-%m', date_sent) AS month, MAX(grade_v) AS maxGrade
     FROM boulder
     WHERE date_sent IS NOT NULL

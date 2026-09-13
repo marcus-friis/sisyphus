@@ -190,3 +190,9 @@ button:disabled,
     text-decoration-thickness: 2px;
     text-underline-offset: 3px;
 }
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+}

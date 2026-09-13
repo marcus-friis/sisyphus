@@ -1,21 +1,23 @@
 <script lang="ts">
   import type { PageProps } from './$types';
+  import type { BoulderWithStats } from '$lib/types';
   import BoulderCard from '$lib/components/BoulderCard.svelte';
+    import Spinner from '$lib/components/Spinner.svelte';
 
   let { data }: PageProps = $props();
 
   let statusFilter = $state<'all' | 'project' | 'sent' | 'flashed'>('all');
   let sortBy = $state<'recent' | 'grade'>('recent');
 
-  let filtered = $derived(
-    data.boulders
+  function filterAndSort(boulders: BoulderWithStats[]) {
+    return boulders
       .filter((b) => statusFilter === 'all' || b.status === statusFilter)
       .sort((a, b) =>
         sortBy === 'grade'
           ? b.gradeV - a.gradeV
           : (b.lastTriedDate ?? '').localeCompare(a.lastTriedDate ?? ''),
-      ),
-  );
+      );
+  }
 </script>
 
 <main class="log">
@@ -38,15 +40,24 @@
     </select>
   </div>
 
-  {#if filtered.length === 0}
-    <p class="empty centered">Nothing matches — try a different filter.</p>
-  {:else}
-    <div class="list">
-      {#each filtered as boulder (boulder.id)}
-        <BoulderCard {boulder} />
-      {/each}
+  {#await data.boulders}
+  <div class="loading-state">
+    <div class="loading-state">
+      <Spinner size={48}/>
     </div>
-  {/if}
+  </div>
+  {:then boulders}
+    {@const filtered = filterAndSort(boulders)}
+    {#if filtered.length === 0}
+      <p class="empty centered">Nothing matches — try a different filter.</p>
+    {:else}
+      <div class="list">
+        {#each filtered as boulder (boulder.id)}
+          <BoulderCard {boulder} />
+        {/each}
+      </div>
+    {/if}
+  {/await}
 </main>
 
 <style>

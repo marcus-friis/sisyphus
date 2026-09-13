@@ -1,5 +1,6 @@
 <script lang="ts">
   import BoulderCard from '$lib/components/BoulderCard.svelte';
+  import Spinner from '$lib/components/Spinner.svelte';
   let { data } = $props();
 </script>
 
@@ -11,7 +12,9 @@
   <section class="recent">
     <h2 class="section-label">Recent activity</h2>
     {#await data.boulders}
-      <p class="empty">Loading...</p>
+      <div class="loading-state">
+        <Spinner size={48} />
+      </div>
     {:then boulders}
       {#if boulders.length === 0}
         <p class="empty">Nothing logged yet — go climb something.</p>
@@ -40,7 +43,7 @@
     font-weight: 700;
     font-size: 1.9rem;
     margin: 0;
-    align-self: flex-start;
+    align-self: flex-center;
   }
 
   .cta {

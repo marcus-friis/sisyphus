@@ -2,40 +2,54 @@
   import type { PageProps } from './$types';
   import GradePyramid from '$lib/components/GradePyramid.svelte';
   import ProgressChart from '$lib/components/ProgressChart.svelte';
+  import Spinner from '$lib/components/Spinner.svelte';
 
   let { data }: PageProps = $props();
 </script>
+
+{#snippet loading()}
+  <div class="loading-state">
+    <Spinner />
+  </div>
+{/snippet}
+
+{#snippet statCard(value: string | number, label: string)}
+  <div class="stat">
+    <span class="value">{value}</span>
+    <span class="label">{label}</span>
+  </div>
+{/snippet}
 
 <main class="analytics">
   <h1>Analytics</h1>
 
   <section class="stats-row">
-    <div class="stat">
-      <span class="value">{data.stats.totalSent + data.stats.totalFlashed}</span>
-      <span class="label">Sent</span>
-    </div>
-    <div class="stat">
-      <span class="value">{data.stats.totalFlashed}</span>
-      <span class="label">Flashed</span>
-    </div>
-    <div class="stat">
-      <span class="value">{data.stats.totalProjects}</span>
-      <span class="label">Projects</span>
-    </div>
-    <div class="stat">
-      <span class="value">{data.stats.avgAttemptsToSend?.toFixed(1) ?? '–'}</span>
-      <span class="label">Avg tries/send</span>
-    </div>
+    {#await data.stats}
+      {@render loading()}
+    {:then stats}
+      {@render statCard(stats.totalSent + stats.totalFlashed, 'Sent')}
+      {@render statCard(stats.totalFlashed, 'Flashed')}
+      {@render statCard(stats.totalProjects, 'Projects')}
+      {@render statCard(stats.avgAttemptsToSend?.toFixed(1) ?? '–', 'Avg tries/send')}
+    {/await}
   </section>
 
   <section>
     <h2 class="section-label">Grade pyramid</h2>
-    <GradePyramid data={data.pyramid} />
+    {#await data.pyramid}
+      {@render loading()}
+    {:then pyramid}
+      <GradePyramid data={pyramid} />
+    {/await}
   </section>
 
   <section>
     <h2 class="section-label">Progress over time</h2>
-    <ProgressChart data={data.progress} />
+    {#await data.progress}
+      {@render loading()}
+    {:then progress}
+      <ProgressChart data={progress} />
+    {/await}
   </section>
 </main>
 
@@ -51,6 +65,10 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
     margin: 1.5rem 0 2rem;
+  }
+
+  .stats-row .loading-state {
+    grid-column: 1 / -1;
   }
 
   .stat {

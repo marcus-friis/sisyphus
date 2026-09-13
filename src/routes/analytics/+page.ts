@@ -7,12 +7,10 @@ import {
 } from "$lib/api/analytics";
 
 export const load: PageLoad = async () => {
-  const [pyramid, volume, progress, stats] = await Promise.all([
-    fetchGradePyramid(),
-    fetchMonthlyVolume(),
-    fetchProgressOverTime(),
-    fetchSendStats(),
-  ]);
-
-  return { pyramid, volume, progress, stats };
+  return {
+    pyramid: fetchGradePyramid(),
+    volume: fetchMonthlyVolume(),
+    progress: fetchProgressOverTime(),
+    stats: fetchSendStats(),
+  };
 };
